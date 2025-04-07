@@ -1,9 +1,17 @@
+@import 'https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css';
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+
 :root {
     --primary-color: #2C5530;  /* 深绿色 */
     --secondary-color: #FFD700;  /* 黄色 */
     --text-color: #FFFFFF;
     --background-color: #1A1A1A;
     --card-background: #2A2A2A;
+    --accent-color: #10b981; /* emerald-600 */
+    --text-light: #ffffff;
+    --text-dark: #374151;
+    --text-muted: #9ca3af;
+    --bg-primary: #f9fafb;
 }
 
 * {
@@ -12,10 +20,15 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--text-dark);
+    background-color: var(--bg-primary);
 }
 
 #app {
@@ -389,4 +402,56 @@ body {
 
 .track-controls i:hover {
     opacity: 1;
+}
+
+/* 音频可视化器样式 */
+.audio-visualizer {
+    width: 100%;
+    height: 60px;
+    margin-top: 10px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 通用动画 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* 防止按钮闪烁 */
+button:focus {
+    outline: none;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.5);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.7);
 } 

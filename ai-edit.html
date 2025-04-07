@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI音频编辑 - 自然声音助眠应用</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container bg-gray-50 min-h-screen pb-16">
+            <!-- 顶部导航栏 -->
+            <nav class="fixed top-0 w-full bg-emerald-600 text-white py-4 px-4 z-50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button class="!rounded-button mr-3" @click="goBack">
+                            <i class="fas fa-arrow-left text-lg"></i>
+                        </button>
+                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 mr-2">
+                            <i class="fas fa-sliders-h text-lg"></i>
+                        </div>
+                        <h1 class="text-lg font-medium">AI 声音定制</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="!rounded-button">
+                            <i class="fas fa-share-alt text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="mt-16 p-4">
+                <!-- 音乐封面和标题 -->
+                <div class="mb-6 flex items-center space-x-4">
+                    <div class="rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 w-20 h-20 flex items-center justify-center shadow-lg">
+                        <i class="fas fa-music text-4xl text-white"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-medium text-gray-900">自然雨声</h2>
+                        <p class="text-sm text-gray-500 mt-1">轻柔的雨声，为您定制的睡眠声音</p>
+                    </div>
+                </div>
+                
+                <!-- 基础编辑选项 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
+                    <h3 class="text-base font-medium text-gray-900 mb-6">音效编辑</h3>
+                    
+                    <!-- 音量控制 -->
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <i class="fas fa-volume-down text-emerald-600 mr-2"></i>主音量
+                            </span>
+                            <span class="text-sm text-emerald-600">80%</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0" max="100" value="80">
+                    </div>
+                    
+                    <!-- 速度控制 -->
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <i class="fas fa-tachometer-alt text-emerald-600 mr-2"></i>速度
+                            </span>
+                            <span class="text-sm text-emerald-600">1.0x</span>
+                        </div>
+                        <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0.5" max="2" step="0.1" value="1">
+                    </div>
+                    
+                    <!-- 混音选项 -->
+                    <div>
+                        <div class="flex justify-between mb-4">
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <i class="fas fa-sliders-h text-emerald-600 mr-2"></i>混音选项
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs text-gray-500">雨声</span>
+                                    <span class="text-xs text-emerald-600">65%</span>
+                                </div>
+                                <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0" max="100" value="65">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs text-gray-500">雷声</span>
+                                    <span class="text-xs text-emerald-600">25%</span>
+                                </div>
+                                <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0" max="100" value="25">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs text-gray-500">风声</span>
+                                    <span class="text-xs text-emerald-600">40%</span>
+                                </div>
+                                <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0" max="100" value="40">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-xs text-gray-500">自然环境</span>
+                                    <span class="text-xs text-emerald-600">50%</span>
+                                </div>
+                                <input type="range" class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600" min="0" max="100" value="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI生成音效 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-base font-medium text-gray-900">AI音效生成</h3>
+                        <span class="text-xs px-2 py-1 bg-emerald-50 text-emerald-600 rounded-full">高级功能</span>
+                    </div>
+                    
+                    <!-- 生成描述 -->
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-2">描述您想要的声音场景</label>
+                        <div class="relative">
+                            <textarea 
+                                class="w-full p-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent h-24"
+                                placeholder="例如：轻柔的雨声，背景有远处的雷声，还有轻微的风声掠过森林..."></textarea>
+                            <button class="absolute right-3 bottom-3 text-emerald-600">
+                                <i class="fas fa-magic"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 场景标签 -->
+                    <div class="mb-4">
+                        <label class="block text-sm text-gray-600 mb-2">快速场景</label>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs cursor-pointer">
+                                <i class="fas fa-tree mr-1"></i>森林雨声
+                            </span>
+                            <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs cursor-pointer">
+                                <i class="fas fa-water mr-1"></i>海边波浪
+                            </span>
+                            <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs cursor-pointer">
+                                <i class="fas fa-fire mr-1"></i>篝火噼啪
+                            </span>
+                            <span class="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-xs cursor-pointer">
+                                <i class="fas fa-cloud-rain mr-1"></i>城市雨声
+                            </span>
+                            <span class="px-3 py-1.5 bg-gray-100 text-gray-500 rounded-full text-xs cursor-pointer">
+                                <i class="fas fa-plus mr-1"></i>更多
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- 生成按钮 -->
+                    <button class="w-full py-3 bg-emerald-600 text-white rounded-lg font-medium flex items-center justify-center">
+                        <i class="fas fa-magic mr-2"></i>
+                        生成AI自定义音效
+                    </button>
+                </div>
+                
+                <!-- 声音效果 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
+                    <h3 class="text-base font-medium text-gray-900 mb-4">声音效果</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                    <i class="fas fa-wind text-emerald-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-900">空间混响</span>
+                            </div>
+                            <div class="w-14 h-7 relative inline-block">
+                                <input type="checkbox" class="peer sr-only" id="toggleReverb" checked>
+                                <label for="toggleReverb" 
+                                       class="bg-emerald-600 peer-checked:bg-emerald-600 block h-7 overflow-hidden rounded-full cursor-pointer transition-all duration-300 w-14 peer-checked:after:translate-x-7 after:bg-white after:border after:border-gray-300 after:rounded-full after:h-6 after:w-6 after:shadow-md after:top-[2px] after:left-[2px] after:absolute after:transition-all after:duration-300"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                    <i class="fas fa-wave-square text-emerald-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-900">低频增强</span>
+                            </div>
+                            <div class="w-14 h-7 relative inline-block">
+                                <input type="checkbox" class="peer sr-only" id="toggleBass" checked>
+                                <label for="toggleBass" 
+                                       class="bg-emerald-600 peer-checked:bg-emerald-600 block h-7 overflow-hidden rounded-full cursor-pointer transition-all duration-300 w-14 peer-checked:after:translate-x-7 after:bg-white after:border after:border-gray-300 after:rounded-full after:h-6 after:w-6 after:shadow-md after:top-[2px] after:left-[2px] after:absolute after:transition-all after:duration-300"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                    <i class="fas fa-filter text-emerald-600"></i>
+                                </div>
+                                <span class="text-sm text-gray-900">噪音过滤</span>
+                            </div>
+                            <div class="w-14 h-7 relative inline-block">
+                                <input type="checkbox" class="peer sr-only" id="toggleFilter">
+                                <label for="toggleFilter" 
+                                       class="bg-gray-200 peer-checked:bg-emerald-600 block h-7 overflow-hidden rounded-full cursor-pointer transition-all duration-300 w-14 peer-checked:after:translate-x-7 after:bg-white after:border after:border-gray-300 after:rounded-full after:h-6 after:w-6 after:shadow-md after:top-[2px] after:left-[2px] after:absolute after:transition-all after:duration-300"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保存设置按钮 -->
+                <div class="flex space-x-4">
+                    <button class="flex-1 py-3 border border-emerald-600 text-emerald-600 rounded-lg font-medium !rounded-button">
+                        保存为预设
+                    </button>
+                    <button class="flex-1 py-3 bg-emerald-600 text-white rounded-lg font-medium !rounded-button">
+                        应用设置
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 底部音频控制器 -->
+            <div class="fixed bottom-16 left-0 w-full bg-white border-t border-gray-100 p-4 z-40">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <button class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center shadow-lg">
+                            <i class="fas fa-play text-white"></i>
+                        </button>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900">自然雨声</h4>
+                            <p class="text-xs text-gray-500">00:00 / 30:00</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button class="text-gray-400">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="text-gray-400">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部导航栏 -->
+            <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
+                <div class="grid grid-cols-5 py-2">
+                    <div v-for="(tab, index) in tabs" :key="index"
+                        class="flex flex-col items-center"
+                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
+                        @click="switchTab(index)">
+                        <i :class="tab.icon" class="text-lg mb-1"></i>
+                        <span class="text-xs">{{ tab.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/ai-edit.js"></script>
+</body>
+</html> 

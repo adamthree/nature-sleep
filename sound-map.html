@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>声音地图 - 自然声音助眠应用</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container bg-white min-h-screen pb-16">
+            <!-- 播放控制栏 -->
+            <div class="fixed bottom-16 left-0 w-full bg-white border-t border-gray-100 px-4 py-3 z-40" v-if="isPlaying">
+                <div class="flex items-center justify-between max-w-375 mx-auto">
+                    <div class="flex items-center flex-1">
+                        <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                            <img :src="currentSound.image" class="w-full h-full object-cover" alt="当前播放">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium text-gray-900 truncate">{{ currentSound.name }}</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">正在播放 · 已完成 {{ playTime }} 分钟</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-emerald-600 !rounded-button">
+                            <i class="fas fa-step-backward text-lg"></i>
+                        </button>
+                        <button class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white !rounded-button" @click="togglePlayPause">
+                            <i :class="['text-lg', isPlaying ? 'fas fa-pause' : 'fas fa-play']"></i>
+                        </button>
+                        <button class="text-emerald-600 !rounded-button">
+                            <i class="fas fa-step-forward text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI睡眠打卡动画 -->
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="showSleepAnimation" style="padding-top: 10vh">
+                <div class="bg-white rounded-xl p-6 w-80 text-center">
+                    <div class="mb-4">
+                        <img src="https://ai-public.mastergo.com/ai/img_res/a9f05c441634e46d5913377577440494.jpg"
+                        class="w-40 h-40 mx-auto rounded-lg object-cover" alt="睡眠动画">
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">冰岛极光陪伴下入眠</h3>
+                    <p class="text-gray-600 text-sm mb-4">今晚在北极光的抚慰下，您已完成 45 分钟的深度睡眠</p>
+                    <div class="flex space-x-2 justify-center">
+                        <div class="px-3 py-1.5 bg-emerald-50 rounded-full">
+                            <span class="text-emerald-600 text-sm">连续打卡 3 天</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-emerald-50 rounded-full">
+                            <span class="text-emerald-600 text-sm">获得 50 积分</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 顶部导航栏 -->
+            <nav class="fixed top-0 w-full bg-emerald-800 text-white py-4 px-4 z-50">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-lg font-medium">声音地图</h1>
+                    <div class="flex items-center">
+                        <div class="mr-4 flex items-center">
+                            <i class="fas fa-calendar-check text-lg mr-1"></i>
+                            <span class="text-sm">已打卡 3 天</span>
+                        </div>
+                        <i class="fas fa-bell text-lg"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 主要内容区 -->
+            <div class="content-wrapper pt-16">
+                <!-- 签到卡片 -->
+                <div class="check-in-card mx-4 mt-4 bg-emerald-700 rounded-xl p-4 text-white">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-medium">每日签到</h3>
+                        <button class="bg-emerald-600 px-4 py-1 rounded-full text-sm !rounded-button">立即签到</button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2">
+                        <div v-for="day in 7" :key="day" class="text-center">
+                            <div class="w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center" :class="day <= 3 ? 'bg-emerald-500' : 'bg-emerald-600/50'">
+                                <i class="fas fa-check text-xs" v-if="day <= 3"></i>
+                            </div>
+                            <span class="text-xs">{{ `周${day}` }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 世界地图展示区 -->
+                <div class="map-section mx-4 mt-6 bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="relative h-[calc(100vh-180px)]">
+                        <img src="https://ai-public.mastergo.com/ai/img_res/694ab94af2bc57a67cfd5590aa2f69b8.jpg"
+                        :style="{ transform: `scale(${zoom})`, transition: 'transform 0.3s ease' }"
+                        class="w-full h-full object-cover" alt="World Map">
+                        <div class="absolute top-4 right-4 flex flex-col gap-2">
+                            <button class="bg-white/90 p-2 rounded-full shadow-sm !rounded-button" @click="zoomIn">
+                                <i class="fas fa-plus text-emerald-700"></i>
+                            </button>
+                            <button class="bg-white/90 p-2 rounded-full shadow-sm !rounded-button" @click="zoomOut">
+                                <i class="fas fa-minus text-emerald-700"></i>
+                            </button>
+                        </div>
+                        <!-- 标记点列表 -->
+                        <div class="absolute inset-0">
+                            <div v-for="marker in markers" :key="marker.id"
+                            :style="{ left: marker.x + '%', top: marker.y + '%' }"
+                            class="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                            @click="selectMarker(marker)">
+                                <div class="relative group">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg">
+                                        {{ marker.id }}
+                                    </div>
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white rounded-lg shadow-lg p-2 w-32 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <p class="text-xs font-medium text-center">{{ marker.name }}</p>
+                                        <p class="text-xs text-gray-500 text-center">已打卡 {{ marker.visits }} 次</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部导航栏 -->
+            <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
+                <div class="grid grid-cols-5 py-2">
+                    <div v-for="(tab, index) in tabs" :key="index"
+                        class="flex flex-col items-center"
+                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
+                        @click="switchTab(index)">
+                        <i :class="tab.icon" class="text-lg mb-1"></i>
+                        <span class="text-xs">{{ tab.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/sound-map.js"></script>
+</body>
+</html> 

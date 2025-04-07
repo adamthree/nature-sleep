@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI睡眠监测 - 自然声音助眠应用</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="app-container bg-white min-h-screen pb-16">
+            <div class="relative h-48 overflow-hidden bg-gradient-to-r from-emerald-600 to-emerald-500">
+                <div class="absolute inset-0 flex flex-col justify-center px-4">
+                    <h2 class="text-2xl font-medium text-white mb-2">智能睡眠监测</h2>
+                    <p class="text-sm text-white/80">专业睡眠质量分析</p>
+                    <div class="mt-4 flex space-x-3">
+                        <div class="px-3 py-1.5 bg-white/20 backdrop-blur rounded-full">
+                            <span class="text-white text-sm">深度睡眠 2.5h</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-white/20 backdrop-blur rounded-full">
+                            <span class="text-white text-sm">睡眠分数 85</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 睡眠周期数据 -->
+            <div class="px-4 -mt-6">
+                <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                    <div class="relative">
+                        <div ref="sleepChart" class="w-full h-48"></div>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <button class="px-4 py-2 bg-emerald-600 text-white rounded-full shadow-lg flex items-center space-x-2 !rounded-button">
+                                <i class="fas fa-moon text-lg"></i>
+                                <span class="text-sm">睡眠监测</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 mb-6">
+                        <div class="text-center">
+                            <span class="text-2xl font-medium text-emerald-600">85</span>
+                            <p class="text-xs text-gray-500 mt-1">睡眠分数</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-2xl font-medium text-emerald-600">7.5h</span>
+                            <p class="text-xs text-gray-500 mt-1">睡眠时长</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-2xl font-medium text-emerald-600">2.5h</span>
+                            <p class="text-xs text-gray-500 mt-1">深睡时长</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-2xl font-medium text-emerald-600">98%</span>
+                            <p class="text-xs text-gray-500 mt-1">睡眠效率</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-100 pb-4">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">睡眠时间</h4>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-bed text-emerald-600"></i>
+                                    <span class="text-gray-600">入睡时间</span>
+                                </div>
+                                <span class="text-gray-900">23:30</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm mt-2">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-sun text-emerald-600"></i>
+                                    <span class="text-gray-600">醒来时间</span>
+                                </div>
+                                <span class="text-gray-900">07:00</span>
+                            </div>
+                        </div>
+                        <div class="border-b border-gray-100 pb-4">
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">睡眠阶段</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">深度睡眠</span>
+                                    <span class="text-gray-900">2.5小时 (33%)</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">浅度睡眠</span>
+                                    <span class="text-gray-900">4小时 (53%)</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">快速眼动</span>
+                                    <span class="text-gray-900">1小时 (14%)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-900 mb-3">其他指标</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">入睡用时</span>
+                                    <span class="text-gray-900">15分钟</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">清醒次数</span>
+                                    <span class="text-gray-900">2次</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-600">体动次数</span>
+                                    <span class="text-gray-900">12次</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 睡眠建议 -->
+            <div class="px-4">
+                <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                    <h3 class="text-base font-medium text-gray-900 mb-4">睡眠建议</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+                                <i class="fas fa-moon text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-1">良好的睡眠规律</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">您的睡眠规律保持稳定，建议继续保持每天23:30左右入睡的习惯。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+                                <i class="fas fa-bed text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-1">深度睡眠时间</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">您的深度睡眠时间达标，有助于身体恢复和免疫系统增强。</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
+                                <i class="fas fa-heart text-emerald-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900 mb-1">睡眠质量优秀</h4>
+                                <p class="text-sm text-gray-500 leading-relaxed">您的睡眠效率达到98%，表明睡眠质量极佳，请继续保持。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 睡眠趋势 -->
+                <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-base font-medium text-gray-900">睡眠趋势分析</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs text-emerald-600 bg-emerald-50 rounded-full !rounded-button">周</button>
+                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button">月</button>
+                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button">年</button>
+                        </div>
+                    </div>
+                    <img src="https://ai-public.mastergo.com/ai/img_res/657c079d2aabad104eac9dcb779fdf38.jpg" alt="睡眠趋势图" class="w-full mb-4">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-medium text-emerald-600">7.2h</div>
+                            <p class="text-xs text-gray-500 mt-1">平均睡眠</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-medium text-emerald-600">23:28</div>
+                            <p class="text-xs text-gray-500 mt-1">平均入睡</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-medium text-emerald-600">07:05</div>
+                            <p class="text-xs text-gray-500 mt-1">平均起床</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 健康小贴士底部栏 -->
+            <div class="fixed bottom-16 left-0 w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 px-4 py-3 z-40">
+                <div class="flex items-center justify-between max-w-375 mx-auto">
+                    <div class="flex items-center space-x-4 flex-1">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <i class="fas fa-lightbulb text-emerald-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-sm text-gray-900 font-medium">温馨提示</span>
+                            <p class="text-xs text-gray-500 mt-1">建议在22:30-23:30之间入睡，保持规律作息</p>
+                        </div>
+                    </div>
+                    <button class="text-emerald-600 !rounded-button">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 顶部导航栏 -->
+            <nav class="fixed top-0 w-full bg-emerald-600 text-white py-4 px-4 z-50">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20 mr-2">
+                            <i class="fas fa-brain text-lg"></i>
+                        </div>
+                        <h1 class="text-lg font-medium">AI 睡眠监测</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="!rounded-button" @click="switchToEdit">
+                            <i class="fas fa-sliders-h text-lg"></i>
+                        </button>
+                        <button class="!rounded-button">
+                            <i class="fas fa-bell text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- 底部导航栏 -->
+            <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
+                <div class="grid grid-cols-5 py-2">
+                    <div v-for="(tab, index) in tabs" :key="index"
+                        class="flex flex-col items-center"
+                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
+                        @click="switchTab(index)">
+                        <i :class="tab.icon" class="text-lg mb-1"></i>
+                        <span class="text-xs">{{ tab.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/ai-monitor.js"></script>
+</body>
+</html> 
