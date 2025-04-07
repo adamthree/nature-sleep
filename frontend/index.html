@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nature Sleep - 智能助眠</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.12/lib/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部导航 -->
+        <div class="header">
+            <div class="logo">Nature Sleep</div>
+            <div class="nav-icons">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+
+        <!-- 主要内容区 -->
+        <div class="main-content">
+            <!-- 功能卡片区 -->
+            <div class="feature-cards">
+                <div class="card">
+                    <i class="fas fa-music"></i>
+                    <span>自然声音</span>
+                </div>
+                <div class="card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>声音地图</span>
+                </div>
+                <div class="card">
+                    <i class="fas fa-crown"></i>
+                    <span>会员特权</span>
+                </div>
+            </div>
+
+            <!-- 声音分类网格 -->
+            <div class="sound-grid">
+                <div class="grid-item" v-for="sound in sounds" :key="sound.id" @click="togglePlay(sound)">
+                    <img :src="sound.image" :alt="sound.name">
+                    <span>{{ sound.name }}</span>
+                    <div class="play-indicator" :class="{ active: activeSounds.has(sound.id) }">
+                        <i :class="activeSounds.has(sound.id) ? 'fas fa-pause' : 'fas fa-play'"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>地图</span>
+            </div>
+            <div class="nav-item" @click="toggleVoiceAssistant">
+                <i class="fas fa-microphone"></i>
+                <span>AI</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>搜索</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+
+        <!-- 音频播放器 -->
+        <div class="audio-player" v-show="isPlaying">
+            <div class="player-info">
+                <img :src="currentSound ? currentSound.image : ''" alt="">
+                <div class="sound-info">
+                    <div class="sound-name">{{ currentSound ? currentSound.name : '未选择声音' }}</div>
+                    <div class="sound-artist">{{ currentSound ? currentSound.artist : '' }}</div>
+                </div>
+            </div>
+            <div class="player-controls">
+                <i class="fas fa-stop" @click="stopAll"></i>
+                <div class="progress-bar">
+                    <div class="progress" :style="{ width: progress + '%' }"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 语音助手界面 -->
+        <div class="voice-assistant" v-show="showVoiceAssistant">
+            <div class="assistant-header">
+                <div class="assistant-title">AI语音助手</div>
+                <i class="fas fa-times" @click="toggleVoiceAssistant"></i>
+            </div>
+            <div class="assistant-messages">
+                <div class="message system">
+                    欢迎使用Nature Sleep智能助手。您可以问我有关助眠声音、失眠问题或直接告诉我您想听的声音，例如"播放雨声"、"我要听海浪声"等。
+                </div>
+                <div class="message" :class="message.type" v-for="(message, index) in messages" :key="index">
+                    {{ message.text }}
+                </div>
+            </div>
+            <div class="assistant-input">
+                <input type="text" v-model="userInput" placeholder="输入您的问题或指令..." @keyup.enter="sendMessage">
+                <button @click="startVoiceRecognition" :disabled="isListening">
+                    <i :class="isListening ? 'fas fa-microphone-alt' : 'fas fa-microphone'"></i>
+                </button>
+                <button @click="sendMessage">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="listening-indicator" v-if="isListening">
+                正在聆听...
+            </div>
+        </div>
+
+        <!-- 混音器面板 -->
+        <div class="mixer-panel" v-show="showMixer && activeSounds.size > 0">
+            <div class="mixer-header">
+                <div class="mixer-title">混音器</div>
+                <i class="fas fa-times" @click="toggleMixer"></i>
+            </div>
+            <div class="mixer-tracks">
+                <div class="track" v-for="id in Array.from(activeSounds)" :key="id">
+                    <div class="track-info">
+                        <img :src="getSoundById(id).image" :alt="getSoundById(id).name">
+                        <span>{{ getSoundById(id).name }}</span>
+                    </div>
+                    <div class="track-controls">
+                        <input type="range" min="0" max="100" v-model="volumes[id]" @input="updateVolume(id)">
+                        <i class="fas fa-times" @click="stopSound(id)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的JS库 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.12/lib/vant.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html> 
+ 
