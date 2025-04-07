@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI睡眠监测 - 自然声音助眠应用</title>
-    <link rel="stylesheet" href="assets/styles/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+    <title>AI监测 - Nature Sleep</title>
+    <!-- TailwindCSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Vue 2.x -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- ECharts库 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <link href="assets/styles/main.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -152,9 +158,15 @@
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-base font-medium text-gray-900">睡眠趋势分析</h3>
                         <div class="flex space-x-2">
-                            <button class="px-3 py-1 text-xs text-emerald-600 bg-emerald-50 rounded-full !rounded-button">周</button>
-                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button">月</button>
-                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button">年</button>
+                            <button class="px-3 py-1 text-xs text-emerald-600 bg-emerald-50 rounded-full !rounded-button" 
+                                    :class="{'bg-emerald-600 text-white': trendPeriod === 'week'}"
+                                    @click="changeTrendPeriod('week')">周</button>
+                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button"
+                                    :class="{'bg-emerald-600 text-white': trendPeriod === 'month'}"
+                                    @click="changeTrendPeriod('month')">月</button>
+                            <button class="px-3 py-1 text-xs text-gray-500 rounded-full !rounded-button"
+                                    :class="{'bg-emerald-600 text-white': trendPeriod === 'year'}"
+                                    @click="changeTrendPeriod('year')">年</button>
                         </div>
                     </div>
                     <img src="https://ai-public.mastergo.com/ai/img_res/657c079d2aabad104eac9dcb779fdf38.jpg" alt="睡眠趋势图" class="w-full mb-4">
@@ -184,10 +196,10 @@
                         </div>
                         <div class="flex-1">
                             <span class="text-sm text-gray-900 font-medium">温馨提示</span>
-                            <p class="text-xs text-gray-500 mt-1">建议在22:30-23:30之间入睡，保持规律作息</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ currentTip }}</p>
                         </div>
                     </div>
-                    <button class="text-emerald-600 !rounded-button">
+                    <button class="text-emerald-600 !rounded-button" @click="showNextTip">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -203,7 +215,7 @@
                         <h1 class="text-lg font-medium">AI 睡眠监测</h1>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button class="!rounded-button" @click="switchToEdit">
+                        <button class="!rounded-button" @click="switchToAiEdit">
                             <i class="fas fa-sliders-h text-lg"></i>
                         </button>
                         <button class="!rounded-button">
@@ -217,8 +229,8 @@
             <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
                 <div class="grid grid-cols-5 py-2">
                     <div v-for="(tab, index) in tabs" :key="index"
-                        class="flex flex-col items-center"
-                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
+                        class="flex flex-col items-center cursor-pointer"
+                        :class="{'text-emerald-600': currentTab === index}"
                         @click="switchTab(index)">
                         <i :class="tab.icon" class="text-lg mb-1"></i>
                         <span class="text-xs">{{ tab.name }}</span>
@@ -228,6 +240,143 @@
         </div>
     </div>
 
-    <script type="module" src="assets/js/ai-monitor.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                currentTab: 2,
+                trendPeriod: 'week',
+                tips: [
+                    "建议在22:30-23:30之间入睡，保持规律作息",
+                    "睡前一小时避免使用手机和电脑，蓝光会影响睡眠质量",
+                    "每天坚持30分钟有氧运动，有助于提高睡眠质量",
+                    "睡前可以听些轻柔的自然声音，帮助放松心情"
+                ],
+                currentTipIndex: 0,
+                tabs: [
+                    { name: '首页', icon: 'fas fa-home' },
+                    { name: '声音地图', icon: 'fas fa-map' },
+                    { name: 'AI', icon: 'fas fa-robot' },
+                    { name: '搜索', icon: 'fas fa-search' },
+                    { name: '我的', icon: 'fas fa-user' }
+                ],
+                sleepChart: null
+            },
+            computed: {
+                currentTip() {
+                    return this.tips[this.currentTipIndex];
+                }
+            },
+            mounted() {
+                this.initSleepChart();
+            },
+            methods: {
+                initSleepChart() {
+                    const chartDom = this.$refs.sleepChart;
+                    this.sleepChart = echarts.init(chartDom);
+                    const option = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{b}: {d}%'
+                        },
+                        color: ['#10B981', '#34D399', '#6EE7B7'],
+                        series: [
+                            {
+                                name: '睡眠阶段',
+                                type: 'pie',
+                                radius: ['45%', '70%'],
+                                avoidLabelOverlap: false,
+                                itemStyle: {
+                                    borderRadius: 10,
+                                    borderColor: '#fff',
+                                    borderWidth: 2
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'outside',
+                                    formatter: '{b}\n{d}%',
+                                    color: '#6B7280',
+                                    fontSize: 12
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        fontSize: 14,
+                                        fontWeight: 'bold',
+                                        color: '#374151'
+                                    },
+                                    itemStyle: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.2)'
+                                    }
+                                },
+                                labelLine: {
+                                    show: true,
+                                    length: 10,
+                                    length2: 10,
+                                    smooth: true,
+                                    lineStyle: {
+                                        color: '#D1D5DB'
+                                    }
+                                },
+                                data: [
+                                    {
+                                        value: 33,
+                                        name: '深度睡眠',
+                                    },
+                                    {
+                                        value: 53,
+                                        name: '浅度睡眠',
+                                    },
+                                    {
+                                        value: 14,
+                                        name: '快速眼动',
+                                    }
+                                ],
+                                zlevel: 0
+                            }
+                        ]
+                    };
+                    this.sleepChart.setOption(option);
+                    
+                    // 响应式调整
+                    window.addEventListener('resize', () => {
+                        this.sleepChart.resize();
+                    });
+                },
+                switchTab(index) {
+                    // 导航到相应页面
+                    switch(index) {
+                        case 0:
+                            window.location.href = 'index.html';
+                            break;
+                        case 1:
+                            window.location.href = 'sound-map.html';
+                            break;
+                        case 2:
+                            // 当前在AI页面，但可能需要切换到AI编辑
+                            window.location.href = 'ai-edit.html';
+                            break;
+                        case 3:
+                            window.location.href = 'search.html';
+                            break;
+                        case 4:
+                            window.location.href = 'profile.html';
+                            break;
+                    }
+                },
+                switchToAiEdit() {
+                    window.location.href = 'ai-edit.html';
+                },
+                showNextTip() {
+                    this.currentTipIndex = (this.currentTipIndex + 1) % this.tips.length;
+                },
+                changeTrendPeriod(period) {
+                    this.trendPeriod = period;
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

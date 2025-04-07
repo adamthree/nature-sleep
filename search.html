@@ -3,203 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>搜索 - 自然声音助眠应用</title>
-    <link rel="stylesheet" href="assets/styles/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+    <title>搜索 - Nature Sleep</title>
+    <!-- TailwindCSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Vue 2.x -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link href="assets/styles/main.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
-        <div class="app-container bg-gray-50 min-h-screen pb-16">
+        <div class="page-container bg-emerald-50/30 min-h-screen pb-16">
             <!-- 顶部导航栏 -->
-            <nav class="fixed top-0 w-full bg-white shadow-sm py-4 px-4 z-50">
-                <div class="flex items-center">
-                    <div class="relative flex-1 max-w-lg">
-                        <input 
-                            type="text" 
-                            v-model="searchQuery" 
-                            @input="search"
-                            class="w-full h-10 pl-10 pr-4 text-sm bg-gray-100 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                            placeholder="搜索自然声音、音乐或专辑..."
-                        >
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
-                            <i class="fas fa-search text-gray-400"></i>
-                        </div>
-                        <button 
-                            v-if="searchQuery" 
-                            @click="clearSearch" 
-                            class="absolute inset-y-0 right-0 flex items-center pr-3"
-                        >
-                            <i class="fas fa-times-circle text-gray-400"></i>
-                        </button>
+            <div class="nav-bar fixed top-0 left-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-emerald-100">
+                <div class="flex items-center px-4 h-12">
+                    <div class="search-box flex-1 flex items-center bg-emerald-50/70 rounded-full h-8 px-3">
+                        <i class="fas fa-search text-gray-400 text-sm"></i>
+                        <input type="text" placeholder="搜索自然声音、场景音乐..." class="flex-1 bg-transparent ml-2 text-sm border-none focus:outline-none">
+                        <i class="fas fa-microphone text-gray-400 text-sm"></i>
                     </div>
                 </div>
-            </nav>
-            
-            <div class="content-wrapper pt-20 px-4">
-                <!-- 历史搜索记录 -->
-                <div v-if="!searchQuery && searchHistory.length > 0" class="mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-base font-medium text-gray-900">搜索历史</h3>
-                        <button class="text-sm text-emerald-600" @click="clearHistory">清空历史</button>
+            </div>
+            <!-- 主体内容区域 -->
+            <div class="content-area mt-14 px-4">
+                <!-- 热门标签 -->
+                <div class="hot-tags mt-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-base font-medium">热门标签</h3>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <div 
-                            v-for="(item, index) in searchHistory" 
-                            :key="index"
-                            class="px-3 py-1.5 bg-white text-gray-600 text-sm rounded-full border border-gray-200 flex items-center space-x-1.5 cursor-pointer"
-                            @click="searchFromHistory(item)"
-                        >
-                            <i class="fas fa-history text-gray-400 text-xs"></i>
-                            <span>{{ item }}</span>
+                        <button class="!rounded-button px-4 py-1.5 bg-emerald-50 text-emerald-600 text-sm" 
+                                v-for="tag in hotTags" :key="tag">{{ tag }}</button>
+                    </div>
+                </div>
+                <!-- 搜索历史 -->
+                <div class="search-history mt-8">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-base font-medium">搜索历史</h3>
+                        <button class="text-sm text-gray-400" @click="clearHistory">清空</button>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <div v-for="(item, index) in searchHistory" :key="index" class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-history text-gray-400 mr-3"></i>
+                                <span class="text-sm">{{ item }}</span>
+                            </div>
+                            <i class="fas fa-times text-gray-400" @click="removeHistoryItem(index)"></i>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 热门搜索 -->
-                <div v-if="!searchQuery" class="mb-6">
-                    <h3 class="text-base font-medium text-gray-900 mb-4">热门搜索</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div 
-                            v-for="(trend, index) in trendingSearches" 
-                            :key="index"
-                            class="flex items-center p-3 bg-white rounded-xl shadow-sm cursor-pointer"
-                            @click="searchFromHistory(trend.keyword)"
-                        >
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3" :class="trend.bgColor">
-                                <i :class="[trend.icon, trend.iconColor]"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-medium text-gray-900">{{ trend.keyword }}</h4>
-                                <p class="text-xs text-gray-500 mt-0.5">{{ trend.count }}+ 人搜索</p>
-                            </div>
-                        </div>
+                <!-- 推荐搜索 -->
+                <div class="recommend-search mt-8">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-base font-medium">大家都在搜</h3>
                     </div>
-                </div>
-                
-                <!-- 搜索结果 -->
-                <div v-if="searchQuery && searchResults.length > 0">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-base font-medium text-gray-900">搜索结果</h3>
-                        <div class="flex items-center space-x-1 text-sm text-gray-500">
-                            <span>{{ searchResults.length }} 条结果</span>
-                            <button class="text-emerald-600 ml-3 !rounded-button">
-                                <i class="fas fa-sort"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 结果分类标签 -->
-                    <div class="flex overflow-x-auto space-x-2 mb-4 pb-1 hide-scrollbar">
-                        <button 
-                            v-for="(category, index) in resultCategories" 
-                            :key="index"
-                            class="px-3 py-1.5 rounded-full text-xs whitespace-nowrap"
-                            :class="selectedCategory === index ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 border border-gray-200'"
-                            @click="filterByCategory(index)"
-                        >
-                            {{ category.name }}
-                            <span class="ml-1 text-xs" :class="selectedCategory === index ? 'text-white/80' : 'text-gray-400'">{{ category.count }}</span>
-                        </button>
-                    </div>
-                    
-                    <!-- 结果列表 -->
-                    <div class="space-y-3">
-                        <div 
-                            v-for="(result, index) in filteredResults" 
-                            :key="index"
-                            class="flex items-center bg-white p-3 rounded-xl shadow-sm"
-                        >
-                            <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-3 overflow-hidden bg-emerald-50">
-                                <img v-if="result.image" :src="result.image" class="w-full h-full object-cover" :alt="result.title">
-                                <i v-else :class="[result.icon || 'fas fa-music', 'text-emerald-600 text-lg']"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between">
-                                    <h4 class="text-sm font-medium text-gray-900 truncate">{{ result.title }}</h4>
-                                    <span class="text-xs px-2 py-0.5 rounded-full" :class="typeStyles[result.type]">{{ result.type }}</span>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1 truncate">{{ result.description }}</p>
-                            </div>
-                            <button class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 ml-3 !rounded-button">
-                                <i class="fas fa-play text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 空搜索结果 -->
-                <div v-if="searchQuery && searchResults.length === 0" class="flex flex-col items-center justify-center py-12">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                        <i class="fas fa-search text-gray-400 text-2xl"></i>
-                    </div>
-                    <p class="text-gray-500 text-sm">没有找到"{{ searchQuery }}"相关的结果</p>
-                    <p class="text-gray-400 text-xs mt-2">请尝试其他关键词</p>
-                </div>
-                
-                <!-- 推荐分类 -->
-                <div v-if="!searchQuery" class="mb-6">
-                    <h3 class="text-base font-medium text-gray-900 mb-4">声音分类</h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div 
-                            v-for="(category, index) in categories" 
-                            :key="index"
-                            class="flex flex-col items-center cursor-pointer"
-                            @click="selectCategory(category)"
-                        >
-                            <div class="w-14 h-14 rounded-full flex items-center justify-center mb-2" :class="category.bgColor">
-                                <i :class="[category.icon, category.iconColor, 'text-xl']"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">{{ category.name }}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 探索音乐合集 -->
-                <div v-if="!searchQuery" class="mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-base font-medium text-gray-900">探索合集</h3>
-                        <button class="text-sm text-emerald-600">查看更多</button>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div 
-                            v-for="(collection, index) in collections" 
-                            :key="index"
-                            class="bg-white rounded-xl shadow-sm overflow-hidden"
-                        >
-                            <div class="h-24 bg-gray-200 relative">
-                                <img :src="collection.image" class="w-full h-full object-cover" :alt="collection.title">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
-                                    <h4 class="text-sm font-medium text-white truncate">{{ collection.title }}</h4>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-gray-500">{{ collection.items }} 个音频</span>
-                                    <button class="w-7 h-7 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 !rounded-button">
-                                        <i class="fas fa-play text-xs"></i>
-                                    </button>
-                                </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div v-for="(item, index) in recommendItems" :key="index"
+                             class="relative rounded-lg overflow-hidden aspect-[3/2] cursor-pointer"
+                             @click="playSound(item)">
+                            <img :src="item.image" class="w-full h-full object-cover" :alt="item.title">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                                <p class="text-white text-sm">{{ item.title }}</p>
+                                <span class="text-white/80 text-xs">{{ item.duration }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
             <!-- 底部导航栏 -->
-            <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
-                <div class="grid grid-cols-5 py-2">
-                    <div v-for="(tab, index) in tabs" :key="index"
-                        class="flex flex-col items-center"
-                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
-                        @click="switchTab(index)">
-                        <i :class="tab.icon" class="text-lg mb-1"></i>
-                        <span class="text-xs">{{ tab.name }}</span>
+            <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-sm border-t border-emerald-100">
+                <div class="grid grid-cols-5 h-14">
+                    <div v-for="(item, index) in tabItems" :key="index"
+                         class="flex flex-col items-center justify-center cursor-pointer"
+                         :class="{'text-emerald-600': item.active, 'text-gray-400': !item.active}"
+                         @click="switchTab(index)">
+                        <i :class="item.icon" class="text-xl mb-1"></i>
+                        <span class="text-[10px]">{{ item.text }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module" src="assets/js/search.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                hotTags: ['自然声音', '雨声', '白噪音', '助眠音乐', '森林', '冥想'],
+                searchHistory: [
+                    '夏日晚风',
+                    '温柔雨声',
+                    '森林漫步',
+                    '舒缓音乐'
+                ],
+                recommendItems: [
+                    {
+                        title: '温柔夜雨',
+                        duration: '60 分钟',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/25965d5223b0f7f510d8fde3fdbebb2c.jpg'
+                    },
+                    {
+                        title: '森林晨光',
+                        duration: '45 分钟',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/2f7ca497e8b5263fc42ec85a723938b3.jpg'
+                    },
+                    {
+                        title: '海浪轻抚',
+                        duration: '30 分钟',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/beecdbcc1b5ca7851e8119bafd8337d1.jpg'
+                    },
+                    {
+                        title: '山谷清风',
+                        duration: '40 分钟',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/10ac2149cbbbf4b00c4e077f67c6b556.jpg'
+                    }
+                ],
+                tabItems: [
+                    { text: '首页', icon: 'fas fa-home', active: false },
+                    { text: '声音地图', icon: 'fas fa-map', active: false },
+                    { text: 'AI', icon: 'fas fa-robot', active: false },
+                    { text: '搜索', icon: 'fas fa-search', active: true },
+                    { text: '我的', icon: 'fas fa-user', active: false }
+                ]
+            },
+            methods: {
+                switchTab(index) {
+                    // 更新激活状态
+                    this.tabItems.forEach((tab, i) => {
+                        tab.active = (i === index);
+                    });
+                    
+                    // 导航到相应页面
+                    switch(index) {
+                        case 0:
+                            window.location.href = 'index.html';
+                            break;
+                        case 1:
+                            window.location.href = 'sound-map.html';
+                            break;
+                        case 2:
+                            window.location.href = 'ai-edit.html';
+                            break;
+                        case 3:
+                            // 当前页面
+                            break;
+                        case 4:
+                            window.location.href = 'profile.html';
+                            break;
+                    }
+                },
+                clearHistory() {
+                    this.searchHistory = [];
+                },
+                removeHistoryItem(index) {
+                    this.searchHistory.splice(index, 1);
+                },
+                playSound(item) {
+                    alert(`播放: ${item.title}`);
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

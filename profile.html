@@ -3,237 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 - 自然声音助眠应用</title>
-    <link rel="stylesheet" href="assets/styles/main.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.6/dist/vue.global.min.js"></script>
+    <title>我的 - Nature Sleep</title>
+    <!-- TailwindCSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Vue 2.x -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <link href="assets/styles/main.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
-        <div class="app-container bg-gray-50 min-h-screen pb-16">
-            <!-- 用户资料卡片 -->
-            <div class="relative bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 pt-12 pb-24">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-xl font-medium text-white">个人中心</h1>
-                    <div class="flex space-x-4">
-                        <button class="text-white !rounded-button">
-                            <i class="fas fa-cog text-lg"></i>
-                        </button>
-                        <button class="text-white !rounded-button">
-                            <i class="fas fa-bell text-lg"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="mt-6 flex items-center">
-                    <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur flex items-center justify-center overflow-hidden">
-                        <img src="https://ai-public.mastergo.com/ai/img_res/f6f2bcfd08e33a5ea5de5b1c4c43aff3.jpg" class="w-full h-full object-cover" alt="用户头像">
-                    </div>
-                    <div class="ml-4">
-                        <h2 class="text-lg font-medium text-white">李小梦</h2>
-                        <p class="text-white/80 text-sm flex items-center mt-1">
-                            <span>高级会员</span>
-                            <i class="fas fa-crown text-amber-300 ml-2"></i>
-                        </p>
+        <div class="page-container bg-emerald-50/30 min-h-screen pb-16">
+            <!-- 顶部导航栏 -->
+            <div class="nav-bar fixed top-0 left-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-emerald-100">
+                <div class="flex items-center justify-between px-4 h-12">
+                    <h1 class="text-lg font-medium">我的</h1>
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-cog text-gray-600"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- 数据卡片 -->
-            <div class="px-4 -mt-12 mb-6 relative z-10">
-                <div class="bg-white rounded-xl shadow-md p-5">
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                            <div class="text-xl font-medium text-emerald-600">108</div>
-                            <p class="text-xs text-gray-500 mt-1">累计使用天数</p>
-                        </div>
-                        <div>
-                            <div class="text-xl font-medium text-emerald-600">320h</div>
-                            <p class="text-xs text-gray-500 mt-1">总睡眠时长</p>
-                        </div>
-                        <div>
-                            <div class="text-xl font-medium text-emerald-600">89</div>
-                            <p class="text-xs text-gray-500 mt-1">平均睡眠分</p>
+            <!-- 主体内容区域 -->
+            <div class="content-area mt-14 px-4">
+                <!-- 用户信息 -->
+                <div class="user-info flex items-center mt-4">
+                    <div class="relative">
+                        <img :src="userInfo.avatar" class="w-16 h-16 rounded-full object-cover" alt="avatar">
+                        <div class="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1">
+                            <i class="fas fa-pencil-alt text-white text-xs"></i>
                         </div>
                     </div>
-                    <div class="mt-4 pt-4 border-t border-gray-100">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">会员有效期</span>
-                            <span class="text-sm text-emerald-600">2024.12.31</span>
+                    <div class="ml-4 flex-1">
+                        <div class="flex items-center">
+                            <h2 class="text-lg font-medium">{{ userInfo.name }}</h2>
+                            <span class="ml-2 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600 text-xs">Pro</span>
                         </div>
-                        <div class="mt-3">
-                            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-600 rounded-full" style="width: 60%"></div>
+                        <p class="text-sm text-gray-500 mt-1">{{ userInfo.bio }}</p>
+                    </div>
+                </div>
+                <!-- 数据统计 -->
+                <!-- 用户数据统计 -->
+                <div class="stats grid grid-cols-5 gap-4 mt-8">
+                    <div v-for="(stat, index) in stats" :key="index" class="text-center">
+                        <div class="text-lg font-medium">{{ stat.value }}</div>
+                        <div class="text-xs text-gray-500 mt-1">{{ stat.label }}</div>
+                    </div>
+                </div>
+                <!-- 我的AI创作 -->
+                <div class="ai-creation mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-medium">我的AI创作</h3>
+                        <button class="text-sm text-gray-400">更多</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div v-for="(creation, index) in aiCreations" :key="index"
+                             class="bg-white rounded-lg p-3 shadow-sm cursor-pointer"
+                             @click="playCreation(creation)">
+                            <div class="h-24 bg-emerald-50 rounded-lg mb-2 flex items-center justify-center">
+                                <i class="fas fa-wave-square text-3xl text-emerald-400"></i>
                             </div>
-                            <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                <span>已使用 183 天</span>
-                                <span>剩余 182 天</span>
+                            <div class="text-sm font-medium truncate">{{ creation.title }}</div>
+                            <div class="flex items-center justify-between mt-1">
+                                <span class="text-xs text-gray-400">{{ creation.duration }}</span>
+                                <i class="fas fa-play-circle text-emerald-500"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- 我的收藏 -->
-            <div class="px-4 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-base font-medium text-gray-900">我的收藏</h3>
-                    <button class="text-sm text-emerald-600">查看全部</button>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm">
-                        <div class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center mr-3">
-                            <i class="fas fa-cloud-rain text-emerald-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900">森林雨声</h4>
-                            <p class="text-xs text-gray-500 mt-1">收藏于 2024-04-15</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-400 !rounded-button">
-                                <i class="fas fa-heart text-red-500"></i>
-                            </button>
-                            <button class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 !rounded-button">
-                                <i class="fas fa-play text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm">
-                        <div class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center mr-3">
-                            <i class="fas fa-water text-emerald-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900">海浪声</h4>
-                            <p class="text-xs text-gray-500 mt-1">收藏于 2024-04-12</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-400 !rounded-button">
-                                <i class="fas fa-heart text-red-500"></i>
-                            </button>
-                            <button class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 !rounded-button">
-                                <i class="fas fa-play text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center bg-white p-3 rounded-xl shadow-sm">
-                        <div class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center mr-3">
-                            <i class="fas fa-moon text-emerald-600"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900">深度睡眠音乐</h4>
-                            <p class="text-xs text-gray-500 mt-1">收藏于 2024-04-05</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="w-8 h-8 flex items-center justify-center text-gray-400 !rounded-button">
-                                <i class="fas fa-heart text-red-500"></i>
-                            </button>
-                            <button class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 !rounded-button">
-                                <i class="fas fa-play text-sm"></i>
-                            </button>
+                <!-- 功能区域 -->
+                <div class="feature-section mt-8">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div v-for="(feature, index) in features" :key="index"
+                             class="feature-item flex flex-col items-center cursor-pointer"
+                             @click="openFeature(feature)">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-2">
+                                <img :src="feature.icon" class="w-8 h-8 object-cover" :alt="feature.name">
+                            </div>
+                            <span class="text-xs text-gray-600">{{ feature.name }}</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- 历史记录 -->
-            <div class="px-4 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-base font-medium text-gray-900">最近播放</h3>
-                    <button class="text-sm text-emerald-600">查看全部</button>
-                </div>
-                <div class="overflow-x-auto hide-scrollbar">
-                    <div class="flex space-x-4 pb-2">
-                        <div v-for="(item, index) in recentPlayed" :key="index" class="w-36 flex-shrink-0">
-                            <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-2 relative group">
-                                <img :src="item.image" class="w-full h-full object-cover" :alt="item.title">
-                                <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-emerald-600">
-                                        <i class="fas fa-play"></i>
-                                    </button>
+                <!-- 我的收藏 -->
+                <div class="favorites-section mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-medium">我的收藏</h3>
+                        <button class="text-sm text-gray-400">查看全部</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div v-for="(item, index) in favoriteItems" :key="index"
+                             class="relative rounded-lg overflow-hidden aspect-[3/2] cursor-pointer"
+                             @click="playFavorite(item)">
+                            <img :src="item.image" class="w-full h-full object-cover" :alt="item.title">
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                                <p class="text-white text-sm">{{ item.title }}</p>
+                                <div class="flex items-center mt-1">
+                                    <i class="fas fa-play-circle text-white/80 text-xs"></i>
+                                    <span class="text-white/80 text-xs ml-1">{{ item.playCount }}</span>
                                 </div>
                             </div>
-                            <h4 class="text-sm font-medium text-gray-900 truncate">{{ item.title }}</h4>
-                            <p class="text-xs text-gray-500">{{ item.time }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 功能入口 -->
-            <div class="px-4 mb-6">
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div class="grid grid-cols-4 divide-x divide-y divide-gray-100">
-                        <div v-for="(menu, index) in functionMenus.slice(0, 4)" :key="index" 
-                            class="flex flex-col items-center justify-center py-4">
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-2" :class="menu.bgColor">
-                                <i :class="[menu.icon, menu.iconColor]"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">{{ menu.name }}</span>
-                        </div>
-                        <div v-for="(menu, index) in functionMenus.slice(4, 8)" :key="index + 4" 
-                            class="flex flex-col items-center justify-center py-4">
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-2" :class="menu.bgColor">
-                                <i :class="[menu.icon, menu.iconColor]"></i>
-                            </div>
-                            <span class="text-xs text-gray-600">{{ menu.name }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 更多服务 -->
-            <div class="px-4 mb-6">
-                <h3 class="text-base font-medium text-gray-900 mb-4">更多服务</h3>
-                <div class="space-y-4">
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="flex items-center justify-between p-4">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center mr-3">
-                                    <i class="fas fa-crown text-purple-600"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-medium text-gray-900">高级会员</h4>
-                                    <p class="text-xs text-gray-500 mt-0.5">解锁全部高级功能</p>
-                                </div>
-                            </div>
-                            <button class="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-full !rounded-button">
-                                开通
-                            </button>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="p-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
-                                        <i class="fas fa-gift text-blue-600"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-sm font-medium text-gray-900">邀请好友</h4>
-                                        <p class="text-xs text-gray-500 mt-0.5">邀请好友获得会员天数</p>
-                                    </div>
-                                </div>
-                                <i class="fas fa-chevron-right text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <!-- 底部导航栏 -->
-            <div class="fixed bottom-0 w-full bg-white border-t border-gray-200">
-                <div class="grid grid-cols-5 py-2">
-                    <div v-for="(tab, index) in tabs" :key="index"
-                        class="flex flex-col items-center"
-                        :class="{'text-emerald-600': currentTab === index, 'text-gray-400': currentTab !== index}"
-                        @click="switchTab(index)">
-                        <i :class="tab.icon" class="text-lg mb-1"></i>
-                        <span class="text-xs">{{ tab.name }}</span>
+            <div class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-sm border-t border-emerald-100">
+                <div class="grid grid-cols-5 h-14">
+                    <div v-for="(item, index) in tabItems" :key="index"
+                         class="flex flex-col items-center justify-center cursor-pointer"
+                         :class="{'text-emerald-600': item.active, 'text-gray-400': !item.active}"
+                         @click="switchTab(index)">
+                        <i :class="item.icon" class="text-xl mb-1"></i>
+                        <span class="text-[10px]">{{ item.text }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module" src="assets/js/profile.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                userInfo: {
+                    name: '小呼噜猫',
+                    bio: '让音乐治愈每一天',
+                    avatar: 'https://ai-public.mastergo.com/ai/img_res/d6c21734aa3518ad9a83143f934ace1e.jpg'
+                },
+                stats: [
+                    { label: '收藏', value: '128' },
+                    { label: '播放', value: '1.2k' },
+                    { label: '创作', value: '36' },
+                    { label: '关注', value: '86' },
+                    { label: '粉丝', value: '92' }
+                ],
+                aiCreations: [
+                    {
+                        title: '雨后森林',
+                        duration: '3:42',
+                    },
+                    {
+                        title: '城市脉动',
+                        duration: '4:15',
+                    },
+                    {
+                        title: '星河梦境',
+                        duration: '5:08',
+                    }
+                ],
+                features: [
+                    {
+                        name: '本地音乐',
+                        icon: 'https://ai-public.mastergo.com/ai/img_res/3c6669f1d82674dca28a6773f6c8bbb5.jpg'
+                    },
+                    {
+                        name: '播放历史',
+                        icon: 'https://ai-public.mastergo.com/ai/img_res/ba3f0824a0cb07e5718bd3ce8f3d8f12.jpg'
+                    },
+                    {
+                        name: '下载管理',
+                        icon: 'https://ai-public.mastergo.com/ai/img_res/15a3b040f0df5c9a55c4a2cb406f9c72.jpg'
+                    },
+                    {
+                        name: '助眠计划',
+                        icon: 'https://ai-public.mastergo.com/ai/img_res/230d52870623c76150e59da599b590fc.jpg'
+                    }
+                ],
+                favoriteItems: [
+                    {
+                        title: '深度睡眠白噪音',
+                        playCount: '1,234',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/74bf69e143076ec0f201608a3ad58064.jpg'
+                    },
+                    {
+                        title: '大自然交响曲',
+                        playCount: '928',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/d6b49038e528db0f7b59f5d2792907ce.jpg'
+                    },
+                    {
+                        title: '城市雨声',
+                        playCount: '756',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/1f69c54ca79188fdfe92cf4177d39a49.jpg'
+                    },
+                    {
+                        title: '海浪冥想',
+                        playCount: '652',
+                        image: 'https://ai-public.mastergo.com/ai/img_res/112c24550e5ae5e075c1f2e31715c839.jpg'
+                    }
+                ],
+                tabItems: [
+                    { text: '首页', icon: 'fas fa-home', active: false },
+                    { text: '声音地图', icon: 'fas fa-map', active: false },
+                    { text: 'AI', icon: 'fas fa-robot', active: false },
+                    { text: '搜索', icon: 'fas fa-search', active: false },
+                    { text: '我的', icon: 'fas fa-user', active: true }
+                ]
+            },
+            methods: {
+                switchTab(index) {
+                    // 更新激活状态
+                    this.tabItems.forEach((tab, i) => {
+                        tab.active = (i === index);
+                    });
+                    
+                    // 导航到相应页面
+                    switch(index) {
+                        case 0:
+                            window.location.href = 'index.html';
+                            break;
+                        case 1:
+                            window.location.href = 'sound-map.html';
+                            break;
+                        case 2:
+                            window.location.href = 'ai-edit.html';
+                            break;
+                        case 3:
+                            window.location.href = 'search.html';
+                            break;
+                        case 4:
+                            // 当前页面
+                            break;
+                    }
+                },
+                playCreation(creation) {
+                    alert(`播放创作: ${creation.title}`);
+                },
+                openFeature(feature) {
+                    alert(`打开功能: ${feature.name}`);
+                },
+                playFavorite(item) {
+                    alert(`播放收藏: ${item.title}`);
+                }
+            }
+        });
+    </script>
 </body>
 </html> 

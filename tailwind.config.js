@@ -1,19 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./**/*.{html,js,vue}",
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+  mode: 'jit',
+  purge: [
+    './**/*.html',
+    './**/*.js',
+    './**/*.vue',
   ],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       maxWidth: {
         '375': '375px',
       },
+      spacing: {
+        '0.5': '0.125rem',
+      },
       borderRadius: {
         'button': '9999px',
       }
     },
+  },
+  variants: {
+    extend: {},
   },
   plugins: [],
 } 
