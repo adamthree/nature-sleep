@@ -1,18 +1,10 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/nature-sleep/' : '/',
   outputDir: 'docs',
-  assetsDir: 'assets',
+  assetsDir: '',
   productionSourceMap: false,
   css: {
-    loaderOptions: {
-      postcss: {
-        postcssOptions: {
-          plugins: [
-            require('tailwindcss'),
-            require('autoprefixer'),
-          ],
-        },
-      },
-    },
-  },
+    extract: true,
+    sourceMap: false
+  }
 } 

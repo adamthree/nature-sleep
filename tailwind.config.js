@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ],
+  purge: ['./src/**/*.{vue,js,ts,jsx,tsx}'],
+  darkMode: false,
   theme: {
     extend: {
       colors: {
@@ -23,6 +22,9 @@ module.exports = {
         '4xl': '2rem',
       },
     },
+  },
+  variants: {
+    extend: {},
   },
   plugins: [],
 } 
