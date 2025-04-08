@@ -4,40 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature Sleep - 智能助眠应用</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.3"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="assets/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script src="assets/js/router.js"></script>
+    <script src="assets/js/audio-visualizer.js"></script>
+    <script src="assets/js/app.js"></script>
 </head>
-<body class="bg-gray-100">
+<body>
     <div id="app">
-        <router-view></router-view>
-        <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200">
-            <div class="flex justify-around items-center h-16">
-                <router-link to="/" class="flex flex-col items-center">
-                    <img src="assets/icons/home.svg" alt="首页" class="w-6 h-6">
-                    <span class="text-xs mt-1">首页</span>
-                </router-link>
-                <router-link to="/sound-map" class="flex flex-col items-center">
-                    <img src="assets/icons/map.svg" alt="声音地图" class="w-6 h-6">
-                    <span class="text-xs mt-1">声音地图</span>
-                </router-link>
-                <router-link to="/ai" class="flex flex-col items-center">
-                    <img src="assets/icons/ai.svg" alt="AI" class="w-6 h-6">
-                    <span class="text-xs mt-1">AI</span>
-                </router-link>
-                <router-link to="/search" class="flex flex-col items-center">
-                    <img src="assets/icons/search.svg" alt="搜索" class="w-6 h-6">
-                    <span class="text-xs mt-1">搜索</span>
-                </router-link>
-                <router-link to="/profile" class="flex flex-col items-center">
-                    <img src="assets/icons/profile.svg" alt="我的" class="w-6 h-6">
-                    <span class="text-xs mt-1">我的</span>
-                </router-link>
-            </div>
+        <nav class="nav">
+            <router-link to="/" class="nav-item">
+                <img src="assets/icons/home.svg" alt="首页" class="nav-icon">
+                <span>首页</span>
+            </router-link>
+            <router-link to="/map" class="nav-item">
+                <img src="assets/icons/map.svg" alt="声音地图" class="nav-icon">
+                <span>声音地图</span>
+            </router-link>
+            <router-link to="/ai" class="nav-item">
+                <img src="assets/icons/ai.svg" alt="AI编辑" class="nav-icon">
+                <span>AI编辑</span>
+            </router-link>
+            <router-link to="/search" class="nav-item">
+                <img src="assets/icons/search.svg" alt="搜索" class="nav-icon">
+                <span>搜索</span>
+            </router-link>
+            <router-link to="/profile" class="nav-item">
+                <img src="assets/icons/profile.svg" alt="我的" class="nav-icon">
+                <span>我的</span>
+            </router-link>
         </nav>
+        <router-view></router-view>
     </div>
-    <script type="module" src="assets/js/app.js"></script>
 </body>
 </html> 
