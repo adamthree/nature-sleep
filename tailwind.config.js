@@ -1,11 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: 'jit',
-  purge: [
-    './**/*.html',
-    './**/*.js',
-    './**/*.vue',
-  ],
+  purge: ['./src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -20,16 +16,16 @@ module.exports = {
       },
       colors: {
         emerald: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399',
+          500: '#10B981',
           600: '#059669',
           700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          800: '#065F46',
+          900: '#064E3B',
         },
       },
     },
