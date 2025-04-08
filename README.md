@@ -1,28 +1,30 @@
 # Nature Sleep - 智能助眠应用
 
-一个基于Web的智能助眠应用，提供自然声音播放、语音交互和音轨混合功能。
+Nature Sleep是一款智能助眠应用，旨在通过自然声音和AI技术帮助用户获得更好的睡眠体验。
 
-## 主要功能
+## 特色功能
 
-- 自然声音播放：包含雨声、海浪、森林等8种自然音效
-- 语音交互：通过语音或文字控制应用
-- 多音轨混合：同时播放多种声音，创建个性化助眠环境
-- 智能助手：提供助眠建议和指导
+- **自然声音库**：收集了全球各地的自然环境声音，包括雨声、海浪、森林等。
+- **声音地图**：通过地图浏览全球各地的自然声音，仿佛身临其境。
+- **AI声音编辑**：使用AI技术混合多种声音，创建独特的睡眠音景。
+- **睡眠监测**：分析睡眠质量，提供数据洞察。
+- **个性化推荐**：根据用户偏好推荐适合的助眠声音。
 
 ## 技术栈
 
-- Vue.js：前端框架
-- Howler.js：音频处理
-- Web Speech API：语音识别
-- CSS3：响应式设计
-
-## 使用方法
-
-1. 点击声音卡片播放/暂停相应声音
-2. 点击底部AI图标，通过语音或文字与助手交互
-3. 可以要求助手播放特定声音或提供助眠建议
-4. 多个声音同时播放时，可调整各声音的音量
+- 前端：Vue.js 2.x, TailwindCSS
+- 音频处理：Web Audio API
+- 数据可视化：ECharts
 
 ## 在线体验
 
-访问 [Nature Sleep](https://adamthree.github.io/nature-sleep) 体验应用 
+访问 [https://adamthree.github.io/nature-sleep](https://adamthree.github.io/nature-sleep) 体验Nature Sleep应用。
+
+## 本地运行
+
+1. 克隆项目到本地：
+```
+git clone https://github.com/adamthree/nature-sleep.git
+```
+
+2. 打开index.html文件即可运行。 

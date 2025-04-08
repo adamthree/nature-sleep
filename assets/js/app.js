@@ -5,56 +5,56 @@ const soundData = {
             id: 1,
             name: '雨声',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=500',
+            image: 'assets/images/rain.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3'
         },
         {
             id: 2,
             name: '海浪',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500',
+            image: 'assets/images/waves.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff1ecd.mp3'
         },
         {
             id: 3,
             name: '森林',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500',
+            image: 'assets/images/forest.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b8baa07d.mp3'
         },
         {
             id: 4,
             name: '白噪音',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?w=500',
+            image: 'assets/images/whitenoise.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3'
         },
         {
             id: 5,
             name: '鸟鸣',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=500',
+            image: 'assets/images/birds.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2021/09/10/audio_27bb7bef30.mp3'
         },
         {
             id: 6,
             name: '薰衣草',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1528722828814-77b9b83aafb2?w=500',
+            image: 'assets/images/lavender.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2021/04/07/audio_b8e81cb8ea.mp3'
         },
         {
             id: 7,
             name: '篝火',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1475738556795-8e4295d52a02?w=500',
+            image: 'assets/images/fire.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2021/04/19/audio_e540b7b45a.mp3'
         },
         {
             id: 8,
             name: '风声',
             artist: 'Nature Sleep',
-            image: 'https://images.unsplash.com/photo-1501630834273-4b5604d2ee31?w=500',
+            image: 'assets/images/wind.jpg',
             url: 'https://cdn.pixabay.com/download/audio/2021/07/24/audio_64b2fcfa9d.mp3'
         }
     ]
@@ -62,6 +62,9 @@ const soundData = {
 
 // 导入音频可视化模块
 import AudioVisualizer from './audio-visualizer.js';
+
+// 导入路由配置
+import router from './router.js'
 
 // 注册组件
 Vue.component('home-page', {
@@ -475,6 +478,7 @@ Vue.component('ai-monitor-page', {
 // 创建Vue实例
 const app = new Vue({
   el: '#app',
+  router,
   data: {
     currentPage: 'home-page'
   },
