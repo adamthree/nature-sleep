@@ -78,13 +78,86 @@ const ProfilePage = {
     `
 };
 
+const routes = [
+    {
+        path: '/',
+        component: {
+            template: `
+                <div class="container mx-auto px-4 py-8">
+                    <h1 class="text-3xl font-bold text-emerald-800 mb-6">欢迎使用 Nature Sleep</h1>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div v-for="sound in sounds" :key="sound.id" class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <img :src="sound.image" :alt="sound.name" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="text-lg font-semibold text-emerald-800">{{ sound.name }}</h3>
+                                <p class="text-gray-600 mt-2">{{ sound.description }}</p>
+                                <button @click="playSound(sound)" class="mt-4 bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600 transition-colors">
+                                    播放
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            data() {
+                return {
+                    sounds: [
+                        {
+                            id: 1,
+                            name: '雨声',
+                            description: '轻柔的雨声，帮助您放松身心',
+                            image: 'assets/images/rain.jpg'
+                        },
+                        {
+                            id: 2,
+                            name: '海浪',
+                            description: '舒缓的海浪声，让您仿佛置身海边',
+                            image: 'assets/images/waves.jpg'
+                        },
+                        {
+                            id: 3,
+                            name: '森林',
+                            description: '宁静的森林声音，带您走进大自然',
+                            image: 'assets/images/forest.jpg'
+                        }
+                    ]
+                }
+            },
+            methods: {
+                playSound(sound) {
+                    // 实现播放功能
+                    console.log('播放声音:', sound.name);
+                }
+            }
+        }
+    },
+    {
+        path: '/map',
+        component: {
+            template: '<div>声音地图页面</div>'
+        }
+    },
+    {
+        path: '/ai',
+        component: {
+            template: '<div>AI编辑页面</div>'
+        }
+    },
+    {
+        path: '/search',
+        component: {
+            template: '<div>搜索页面</div>'
+        }
+    },
+    {
+        path: '/profile',
+        component: {
+            template: '<div>个人中心页面</div>'
+        }
+    }
+];
+
 // 创建路由实例
 const router = new VueRouter({
-    routes: [
-        { path: '/', component: HomePage },
-        { path: '/map', component: SoundMapPage },
-        { path: '/ai', component: AIEditPage },
-        { path: '/search', component: SearchPage },
-        { path: '/profile', component: ProfilePage }
-    ]
+    routes
 }); 

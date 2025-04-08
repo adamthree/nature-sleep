@@ -3,41 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nature Sleep - 智能助眠应用</title>
-    <link rel="stylesheet" href="assets/styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Nature Sleep - 自然睡眠</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
+    <!-- Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
-    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
-    <script src="assets/js/router.js"></script>
-    <script src="assets/js/audio-visualizer.js"></script>
-    <script src="assets/js/app.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        [v-cloak] { display: none; }
+    </style>
 </head>
-<body>
-    <div id="app">
-        <nav class="nav">
-            <router-link to="/" class="nav-item">
-                <img src="assets/icons/home.svg" alt="首页" class="nav-icon">
-                <span>首页</span>
-            </router-link>
-            <router-link to="/map" class="nav-item">
-                <img src="assets/icons/map.svg" alt="声音地图" class="nav-icon">
-                <span>声音地图</span>
-            </router-link>
-            <router-link to="/ai" class="nav-item">
-                <img src="assets/icons/ai.svg" alt="AI编辑" class="nav-icon">
-                <span>AI编辑</span>
-            </router-link>
-            <router-link to="/search" class="nav-item">
-                <img src="assets/icons/search.svg" alt="搜索" class="nav-icon">
-                <span>搜索</span>
-            </router-link>
-            <router-link to="/profile" class="nav-item">
-                <img src="assets/icons/profile.svg" alt="我的" class="nav-icon">
-                <span>我的</span>
-            </router-link>
+<body class="bg-gray-100">
+    <div id="app" v-cloak>
+        <!-- 顶部导航 -->
+        <nav class="bg-emerald-600 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="assets/images/logo.svg" alt="Nature Sleep" class="h-8 w-8 mr-2">
+                    <span class="text-xl font-bold">Nature Sleep</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 hover:bg-emerald-700 rounded-full">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="p-2 hover:bg-emerald-700 rounded-full">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
         </nav>
-        <router-view></router-view>
+
+        <!-- 主要内容 -->
+        <main class="container mx-auto p-4">
+            <!-- 功能卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-2">聆听自然声音</h3>
+                    <p class="text-gray-600">探索丰富的自然声音库</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-2">声音地图</h3>
+                    <p class="text-gray-600">探索全球自然声音</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-2">成为会员</h3>
+                    <p class="text-gray-600">解锁更多高级功能</p>
+                </div>
+            </div>
+
+            <!-- 声音网格 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div v-for="sound in sounds" :key="sound.id" class="bg-white rounded-lg shadow overflow-hidden">
+                    <img :src="sound.image" :alt="sound.name" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-semibold">{{ sound.name }}</h4>
+                        <p class="text-sm text-gray-600">{{ sound.description }}</p>
+                        <div class="mt-2 flex justify-between items-center">
+                            <button @click="playSound(sound)" class="text-emerald-600 hover:text-emerald-700">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button @click="toggleFavorite(sound)" class="text-gray-400 hover:text-red-500">
+                                <i :class="sound.isFavorite ? 'fas' : 'far'" class="fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 音频播放器 -->
+        <audio-player v-if="currentSound" :current-sound="currentSound"></audio-player>
+
+        <!-- 底部导航 -->
+        <nav class="fixed bottom-0 w-full bg-white border-t border-gray-200">
+            <div class="container mx-auto">
+                <div class="flex justify-around items-center h-16">
+                    <a href="index.html" class="text-emerald-600">
+                        <i class="fas fa-home"></i>
+                        <span class="text-xs">首页</span>
+                    </a>
+                    <a href="sound-map.html" class="text-gray-600">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="text-xs">地图</span>
+                    </a>
+                    <a href="ai-edit.html" class="text-gray-600">
+                        <i class="fas fa-magic"></i>
+                        <span class="text-xs">AI</span>
+                    </a>
+                    <a href="search.html" class="text-gray-600">
+                        <i class="fas fa-search"></i>
+                        <span class="text-xs">搜索</span>
+                    </a>
+                    <a href="profile.html" class="text-gray-600">
+                        <i class="fas fa-user"></i>
+                        <span class="text-xs">我的</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
     </div>
+
+    <!-- 应用脚本 -->
+    <script src="assets/js/app.js" type="module"></script>
 </body>
 </html> 
