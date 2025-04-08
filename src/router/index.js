@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Favorites from '../views/Favorites.vue'
-import Settings from '../views/Settings.vue'
+
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -12,17 +13,18 @@ const routes = [
   {
     path: '/favorites',
     name: 'Favorites',
-    component: Favorites
+    component: () => import('../views/Favorites.vue')
   },
   {
     path: '/settings',
     name: 'Settings',
-    component: Settings
+    component: () => import('../views/Settings.vue')
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+const router = new VueRouter({
+  mode: 'hash',
+  base: process.env.BASE_URL,
   routes
 })
 
