@@ -21,24 +21,85 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
+            padding-bottom: 80px; /* 为底部导航留出空间 */
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
+        /* 顶部导航 */
+        .top-nav {
+            background-color: #059669; /* 深绿色 */
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            color: #0f172a;
-            margin-bottom: 1rem;
+        .top-nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
         }
 
-        .sound-grid {
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo span {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-actions button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        /* 功能卡片区 */
+        .feature-cards {
+            margin-top: 4rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: #059669;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 声音网格 */
+        .sound-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
         }
 
         .sound-card {
@@ -55,33 +116,33 @@
 
         .sound-image {
             width: 100%;
-            height: 200px;
+            height: 150px;
             object-fit: cover;
         }
 
         .sound-content {
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         .sound-title {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .sound-description {
             color: #64748b;
-            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
         }
 
         .sound-duration {
             color: #94a3b8;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
+            font-size: 0.75rem;
         }
 
         .play-button {
-            background: #0ea5e9;
+            background: #059669;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
@@ -90,12 +151,14 @@
             transition: background-color 0.2s;
             display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
 
         .play-button:hover {
-            background: #0284c7;
+            background: #047857;
         }
-        
+
         .play-icon {
             display: inline-block;
             width: 0;
@@ -103,17 +166,79 @@
             border-style: solid;
             border-width: 6px 0 6px 10px;
             border-color: transparent transparent transparent #ffffff;
-            margin-right: 6px;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.5rem;
+            z-index: 100;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+
+        .nav-item.active {
+            color: #059669;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Nature Sleep</h1>
-            <p>享受自然的声音，获得更好的睡眠</p>
-        </header>
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <div class="container">
+            <div class="logo">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=64&auto=format&fit=crop" alt="Logo">
+                <span>Nature Sleep</span>
+            </div>
+            <div class="nav-actions">
+                <button><i class="fas fa-search"></i></button>
+                <button><i class="fas fa-user"></i></button>
+            </div>
+        </div>
+    </nav>
 
+    <div class="container">
+        <!-- 功能卡片区 -->
+        <div class="feature-cards">
+            <div class="feature-card">
+                <h3>聆听自然声音</h3>
+                <p>探索丰富的自然声音库</p>
+            </div>
+            <div class="feature-card">
+                <h3>声音地图</h3>
+                <p>探索全球自然声音</p>
+            </div>
+            <div class="feature-card">
+                <h3>成为会员</h3>
+                <p>解锁更多高级功能</p>
+            </div>
+        </div>
+
+        <!-- 声音网格 -->
         <div class="sound-grid">
             <div class="sound-card">
                 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop" alt="Ocean Waves" class="sound-image">
@@ -152,5 +277,31 @@
             </div>
         </div>
     </div>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>首页</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <span>地图</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🤖</span>
+                <span>AI</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔍</span>
+                <span>搜索</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>我的</span>
+            </a>
+        </div>
+    </nav>
 </body>
 </html>
