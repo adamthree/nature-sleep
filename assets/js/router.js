@@ -7,27 +7,27 @@ const HomePage = {
                 <p>智能助眠，自然入眠</p>
             </div>
             <div class="sound-list">
-                <div v-for="sound in sounds" :key="sound.id" class="sound-item" @click="playSound(sound)">
+                <div v-for="sound in $root.sounds" :key="sound.id" class="sound-item" @click="$root.playSound(sound)">
                     <img :src="sound.image" :alt="sound.name" class="sound-image">
                     <div class="sound-info">
                         <h3>{{ sound.name }}</h3>
                         <p>{{ sound.category }} · {{ sound.duration }}</p>
                     </div>
                     <button class="play-button">
-                        <i :class="currentSound && currentSound.id === sound.id && isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
+                        <i :class="$root.currentSound && $root.currentSound.id === sound.id && $root.isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
                     </button>
                 </div>
             </div>
-            <div v-if="currentSound" class="player">
+            <div v-if="$root.currentSound" class="player">
                 <div class="player-info">
-                    <h3>{{ currentSound.name }}</h3>
-                    <p>{{ formatTime(remainingTime) }}</p>
+                    <h3>{{ $root.currentSound.name }}</h3>
+                    <p>{{ $root.formatTime($root.remainingTime) }}</p>
                 </div>
                 <div class="player-controls">
-                    <button @click="stopSound">
+                    <button @click="$root.stopSound">
                         <i class="fas fa-stop"></i>
                     </button>
-                    <input type="range" v-model="volume" min="0" max="1" step="0.1" @input="setVolume">
+                    <input type="range" v-model="$root.volume" min="0" max="1" step="0.1" @input="$root.setVolume">
                 </div>
             </div>
         </div>
@@ -87,7 +87,4 @@ const router = new VueRouter({
         { path: '/search', component: SearchPage },
         { path: '/profile', component: ProfilePage }
     ]
-});
-
-// 导出路由实例
-export default router 
+}); 
